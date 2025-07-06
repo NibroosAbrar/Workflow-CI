@@ -15,14 +15,15 @@ from sklearn.metrics import (
 dataset = os.path.normpath(sys.argv[1].strip('"'))
 print("Dataset path:", dataset)
 
+# ✅ Pastikan folder tracking MLflow ada (khusus lokal / CI/CD)
+os.makedirs("mlruns", exist_ok=True)
+
 # ✅ Set tracking URI ke folder lokal (CI-safe)
 mlflow.set_tracking_uri("file:mlruns")
 mlflow.set_experiment("submission model")
 
 # ✅ Mulai MLflow run dengan context manager
-with mlflow.start_run() as run:
-    print(f"MLFLOW_RUN_ID:{run.info.run_id}")
-
+with mlflow.start_run():
     # 📥 Load dataset
     df = pd.read_csv(dataset)
 
@@ -59,7 +60,7 @@ with mlflow.start_run() as run:
     example_input = X_test.iloc[:1]
     mlflow.sklearn.log_model(model, artifact_path="model", input_example=example_input)
 
-    # 🖨️ Output hasil evaluasi
+    # 🖨️ Output hasil evaluasi ke console
     print(f"MSE  : {mse:.2f}")
     print(f"RMSE : {rmse:.2f}")
     print(f"MAE  : {mae:.2f}")
