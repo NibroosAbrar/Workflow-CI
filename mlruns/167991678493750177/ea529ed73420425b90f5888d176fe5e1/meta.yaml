@@ -1,0 +1,14 @@
+artifact_uri: file:D:/mlflow_log/167991678493750177/ea529ed73420425b90f5888d176fe5e1/artifacts
+end_time: 1750870996524
+entry_point_name: ''
+experiment_id: '167991678493750177'
+lifecycle_stage: active
+run_id: ea529ed73420425b90f5888d176fe5e1
+run_name: luminous-pug-397
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750870960609
+status: 3
+tags: []
+user_id: Nibroos
