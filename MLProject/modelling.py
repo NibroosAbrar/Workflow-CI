@@ -23,7 +23,7 @@ mlflow.set_tracking_uri("file:mlruns")
 mlflow.set_experiment("submission model")
 
 # ✅ Mulai MLflow run dengan context manager
-with mlflow.start_run():
+with mlflow.start_run(nested=True):
     # 📥 Load dataset
     df = pd.read_csv(dataset)
 
