@@ -64,3 +64,5 @@ with mlflow.start_run() as run:
     print(f"RMSE : {rmse:.2f}")
     print(f"MAE  : {mae:.2f}")
     print(f"MAPE : {mape * 100:.2f}%")
+    
+    print(f"MLFLOW_RUN_ID:{run.info.run_id}")
