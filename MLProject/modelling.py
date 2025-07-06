@@ -12,8 +12,8 @@ from sklearn.metrics import (
 )
 
 # ✅ Ambil path dataset dari argumen command-line
-dataset_path = os.path.normpath(sys.argv[1].strip('"'))
-print("Dataset path:", dataset_path)
+dataset = os.path.normpath(sys.argv[1].strip('"'))
+print("Dataset path:", dataset)
 
 # ✅ Set tracking URI ke folder lokal (default CI-safe)
 mlflow.set_tracking_uri("file:mlruns")
@@ -26,7 +26,7 @@ if run is None:
 print(f"MLFLOW_RUN_ID:{run.info.run_id}")
 
 # 📥 Load dataset
-df = pd.read_csv(dataset_path)
+df = pd.read_csv(dataset)
 
 # 🎯 Target dan fitur
 target_column = 'price'
