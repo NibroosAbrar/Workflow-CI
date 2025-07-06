@@ -17,20 +17,17 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      # Langkah 1: Ambil kode dari repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Langkah 2: Setup Python
       - name: Set up Python 3.12
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
 
-      # Langkah 3: Tampilkan dan cek file dataset
       - name: Check environment variable and dataset file
         run: |
-          echo "í³„ CSV_URL is set to: $CSV_URL"
+          echo "ðŸ“„ CSV_URL is set to: $CSV_URL"
           if [ ! -f "$CSV_URL" ]; then
             echo "âŒ File $CSV_URL not found!"
             exit 1
@@ -38,32 +35,22 @@ jobs:
             echo "âœ… File ditemukan."
           fi
 
-      # Langkah 4: Install library
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install mlflow scikit-learn pandas
 
-      # Langkah 5: Jalankan MLflow Project
-      - name: Run MLflow Project
+      - name: Run MLflow Project and capture output
+        id: run_mlflow
         run: |
-          mlflow run MLProject --env-manager=local
+          mlflow run MLProject --env-manager=local > run_output.log 2>&1 || (cat run_output.log && exit 1)
 
-      # Langkah 6: Ambil run_id terakhir
-      - name: Get latest MLflow run_id
+      - name: Extract MLflow run_id from output
         run: |
-          if [ -d "mlruns/0" ]; then
-            latest_run=$(ls -td mlruns/0/* | head -1 | xargs -n1 basename)
-            echo "âœ… Latest run_id: $latest_run"
-            echo "run_id=$latest_run" >> $GITHUB_ENV
-          else
-            echo "âŒ Folder mlruns/0 tidak ditemukan."
-            exit 1
-          fi
+          run_id=$(grep -o 'MLFLOW_RUN_ID:[a-z0-9]\{32\}' run_output.log | cut -d':' -f2)
+          echo "âœ… Extracted run_id: $run_id"
+          echo "run_id=$run_id" >> $GITHUB_ENV
 
-      # Langkah 7: Tampilkan isi folder mlruns
-      - name: List mlruns content
+      - name: Use run_id (optional)
         run: |
-          echo "í³‚ Daftar isi mlruns:"
-          ls -R mlruns || echo "Folder mlruns tidak ditemukan"
-
+          echo "ðŸŽ¯ Latest MLflow run_id is: $run_id"
